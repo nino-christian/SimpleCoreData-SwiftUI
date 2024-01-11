@@ -16,6 +16,8 @@
 		C1BD32812B4F3CEC00E5291F /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BD32802B4F3CEC00E5291F /* AppTheme.swift */; };
 		C1BD32832B4F4CC800E5291F /* ItemFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BD32822B4F4CC800E5291F /* ItemFormView.swift */; };
 		C1BD32852B4F4F2E00E5291F /* AppTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BD32842B4F4F2E00E5291F /* AppTextField.swift */; };
+		C1BD32872B4F61D900E5291F /* CoreDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BD32862B4F61D900E5291F /* CoreDataRepository.swift */; };
+		C1BD32892B4F6B5A00E5291F /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BD32882B4F6B5A00E5291F /* CoreDataService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +31,8 @@
 		C1BD32802B4F3CEC00E5291F /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		C1BD32822B4F4CC800E5291F /* ItemFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemFormView.swift; sourceTree = "<group>"; };
 		C1BD32842B4F4F2E00E5291F /* AppTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTextField.swift; sourceTree = "<group>"; };
+		C1BD32862B4F61D900E5291F /* CoreDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataRepository.swift; sourceTree = "<group>"; };
+		C1BD32882B4F6B5A00E5291F /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +71,8 @@
 				C1BD32822B4F4CC800E5291F /* ItemFormView.swift */,
 				C1BD32842B4F4F2E00E5291F /* AppTextField.swift */,
 				C1BD32802B4F3CEC00E5291F /* AppTheme.swift */,
+				C1BD32882B4F6B5A00E5291F /* CoreDataService.swift */,
+				C1BD32862B4F61D900E5291F /* CoreDataRepository.swift */,
 				C1BD32702B4F1B4000E5291F /* Assets.xcassets */,
 				C1BD327D2B4F1FEB00E5291F /* ItemModel.xcdatamodeld */,
 				C1BD32722B4F1B4000E5291F /* Preview Content */,
@@ -152,8 +158,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1BD32872B4F61D900E5291F /* CoreDataRepository.swift in Sources */,
 				C1BD326F2B4F1B3F00E5291F /* ContentView.swift in Sources */,
 				C1BD32832B4F4CC800E5291F /* ItemFormView.swift in Sources */,
+				C1BD32892B4F6B5A00E5291F /* CoreDataService.swift in Sources */,
 				C1BD326D2B4F1B3F00E5291F /* SimpleCoreDataApp.swift in Sources */,
 				C1BD327F2B4F1FEB00E5291F /* ItemModel.xcdatamodeld in Sources */,
 				C1BD32852B4F4F2E00E5291F /* AppTextField.swift in Sources */,
