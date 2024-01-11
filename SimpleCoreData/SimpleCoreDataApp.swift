@@ -9,7 +9,15 @@ import SwiftUI
 
 @main
 struct SimpleCoreDataApp: App {
-    @StateObject var contentViewModel: ContentViewModel = ContentViewModel()
+    var coreDataRepository: CoreDataRepository<ItemEntity>
+    var coreDataService: CoreDataService<ItemEntity>
+    var contentViewModel: ContentViewModel
+    
+    init() {
+        self.coreDataRepository = CoreDataRepository<ItemEntity>(modelName: "ItemModel")
+        self.coreDataService = CoreDataService(repository: coreDataRepository)
+        self.contentViewModel = ContentViewModel(coreDataService: coreDataService)
+    }
     
     var body: some Scene {
         WindowGroup {

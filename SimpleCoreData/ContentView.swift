@@ -51,11 +51,16 @@ struct ContentView: View {
             .padding()
             .navigationTitle("Simple CoreData")
         }
+        .onAppear(perform: {
+            viewModel.getItems()
+        })
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(viewModel: ContentViewModel())
+        var coreDataRepository = CoreDataRepository<ItemEntity>(modelName: "ItemEntity")
+        var coreDataService = CoreDataService(repository: coreDataRepository)
+        ContentView(viewModel: ContentViewModel(coreDataService: coreDataService))
     }
 }
