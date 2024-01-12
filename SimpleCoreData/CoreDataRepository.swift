@@ -26,7 +26,7 @@ protocol CoreDataRepositoryProtocol {
     func fetchRequest() -> NSFetchRequest<T>
     func addEntity(entity: T)
     func deleteEntity(index: IndexSet)
-    func updateEntity(entity: T)
+    func updateEntity(withPredicate predicate: NSPredicate, updateHandler: (T) -> Void)
     func saveData()
 }
 
@@ -55,11 +55,46 @@ final class CoreDataRepository<T: NSManagedObject>: CoreDataRepositoryProtocol {
         saveData()
     }
     
-    func deleteEntity(index: IndexSet) {
+    func deleteEntity(withPredicate predicate: NSPredicate) {
+        let context = container.viewContext
         
+        let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
+        fetchRequest.predicate = predicate
+        
+        do {
+            let fetchedResults = try context.fetch(fetchRequest)
+            if let existingItem = fetchedResults.first {
+                context.delete(existingItem)
+                saveData()
+            } else {
+                print("Item does not exist in Core Data.")
+            }
+            
+         
+        } catch {
+            print("Could not fetch request: \(CoreDataError.CoreDataStorageError(error))")
+        }
     }
     
-    func updateEntity(entity: T) {
+    func updateEntity<T: NSManagedObject>(withPredicate predicate: NSPredicate, updateHandler: (T) -> Void) {
+        let context = container.viewContext
+        
+        let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
+        fetchRequest.predicate = predicate
+        
+        do {
+            let fetchedResults = try context.fetch(fetchRequest)
+            if let existingItem = fetchedResults.first {
+                updateHandler(existingItem)
+                saveData()
+            } else {
+                print("Item does not exist in Core Data.")
+            }
+            
+         
+        } catch {
+            print("Could not fetch request: \(CoreDataError.CoreDataStorageError(error))")
+        }
         
     }
     
@@ -73,9 +108,4 @@ final class CoreDataRepository<T: NSManagedObject>: CoreDataRepositoryProtocol {
             }
         }
     }
-    
-    
-   
-    
-    
 }

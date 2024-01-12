@@ -13,10 +13,10 @@ struct ItemModel {
 }
 
 struct ContentView: View {
-    @State var itemName: String = ""
-    @State var itemQuantity: String = ""
+    @State private var itemName: String = ""
+    @State private var itemQuantity: String = ""
     
-    @ObservedObject var viewModel: ContentViewModel
+    @ObservedObject private var viewModel: ContentViewModel
 
     init(viewModel: ContentViewModel) {
         self.viewModel = viewModel
@@ -34,7 +34,7 @@ struct ContentView: View {
                                 }
                 )
                 List {
-                    ForEach(viewModel.itemsList) { entity in
+                    ForEach(viewModel.itemsList, id: \.self) { entity in
                         HStack {
                             VStack(alignment: .leading) {
                                 Text("Item: \(entity.name ?? "No Name")")
@@ -59,8 +59,8 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        var coreDataRepository = CoreDataRepository<ItemEntity>(modelName: "ItemEntity")
-        var coreDataService = CoreDataService(repository: coreDataRepository)
+        let coreDataRepository = CoreDataRepository<ItemEntity>(modelName: "ItemEntity")
+        let coreDataService = CoreDataService(repository: coreDataRepository)
         ContentView(viewModel: ContentViewModel(coreDataService: coreDataService))
     }
 }

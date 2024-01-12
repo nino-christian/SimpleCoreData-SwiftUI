@@ -17,8 +17,8 @@ protocol CoreDataServiceProtocol {
     
     func getAllEntities() -> [T]
     func addEntity(entity: T)
-    func deleteEntity(index: IndexSet)
-    func updateEntity(entity: T)
+    func deleteEntity(for entity: T.Type, entityProperty: String, propertyValue: Any)
+    func updateEntity(for entity: T.Type, entityProperty: String, propertyValue: Any, updateHandler: (T) -> Void)
 }
 
 final class CoreDataService<T: NSManagedObject>: CoreDataServiceProtocol {
@@ -42,11 +42,13 @@ final class CoreDataService<T: NSManagedObject>: CoreDataServiceProtocol {
         repository.addEntity(entity: entity)
     }
     
-    func deleteEntity(index: IndexSet) {
-        repository.deleteEntity(index: index)
+    func deleteEntity<T: NSManagedObject>(for entity: T.Type, entityProperty: String, propertyValue: Any) {
+        repository.deleteEntity(withPredicate: NSPredicate(format: "\(entityProperty) == %@", [propertyValue]))
     }
     
-    func updateEntity(entity: T) {
-        repository.updateEntity(entity: entity)
+    func updateEntity<T: NSManagedObject>(for entity: T.Type, entityProperty: String, propertyValue: Any, updateHandler: (T) -> Void) {
+        repository.updateEntity(withPredicate: NSPredicate(format: "\(entityProperty) == %@", [propertyValue])) { (existingItem: T) in
+            updateHandler(existingItem)
+        }
     }
 }
