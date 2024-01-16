@@ -7,14 +7,26 @@
 
 import SwiftUI
 
-struct ItemModel {
+struct ItemModel: Identifiable {
+    let id = UUID()
     var name: String
     var quantity: Int32
+    
+    init(name: String, quantity: Int32) {
+        self.name = name
+        self.quantity = quantity
+    }
+    
+    init(entity: ItemEntity) {
+        self.name = entity.name ?? "No Name"
+        self.quantity = entity.quantity
+    }
 }
 
 struct ContentView: View {
     @State private var itemName: String = ""
     @State private var itemQuantity: String = ""
+    @State private var selectedItems = Set<UUID>()
     
     @ObservedObject private var viewModel: ContentViewModel
 
@@ -33,22 +45,27 @@ struct ContentView: View {
                                     viewModel.addItem(item: ItemModel(name: itemName, quantity: Int32(itemQuantity)!))
                                 }
                 )
-                List {
-                    ForEach(viewModel.itemsList, id: \.self) { entity in
+                List(selection: $selectedItems) {
+                    ForEach(viewModel.itemsList, id: \.id) { entity in
                         HStack {
                             VStack(alignment: .leading) {
-                                Text("Item: \(entity.name ?? "No Name")")
+                                Text("Item: \(entity.name)")
                                     .font(.headline)
                                 Text("Quantity: \(entity.quantity)")
                                     .font(.subheadline)
                             }
                         }
                     }
-                    .onDelete(perform: viewModel.deleteItem)
+                    .onDelete(perform: { indexSet in
+                        viewModel.deleteItem(index: indexSet)
+                    })
                     .listStyle(.plain)
                 }
             }
             .padding()
+            .toolbar {
+                EditButton()
+            }
             .navigationTitle("Simple CoreData")
         }
         .onAppear(perform: {

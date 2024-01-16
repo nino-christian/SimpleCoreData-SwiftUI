@@ -15,10 +15,10 @@ protocol CoreDataServiceProtocol {
     
     init(repository: CoreDataRepository<T>)
     
-    func getAllEntities() -> [T]
+    func getAllEntities(for entity: T.Type) -> [T]
     func addEntity(entity: T)
-    func deleteEntity(for entity: T.Type, entityProperty: String, propertyValue: Any)
-    func updateEntity(for entity: T.Type, entityProperty: String, propertyValue: Any, updateHandler: (T) -> Void)
+    func deleteEntity(entityProperty: String, propertyValue: Any)
+    func updateEntity(entityProperty: String, propertyValue: Any, updateHandler: (T) -> Void)
 }
 
 final class CoreDataService<T: NSManagedObject>: CoreDataServiceProtocol {
@@ -28,25 +28,19 @@ final class CoreDataService<T: NSManagedObject>: CoreDataServiceProtocol {
         self.repository = repository
     }
     
-    func getAllEntities() -> [T] {
-        let fetchRequest = repository.fetchRequest()
-        do {
-            return try repository.container.viewContext.fetch(fetchRequest)
-        } catch {
-            print("Failed fetching entities: \(CoreDataError.CoreDataFetchError(error))")
-        }
-        return []
+    func getAllEntities(for entity: T.Type) -> [T] {
+        return repository.fetchRequest()
     }
     
     func addEntity(entity: T) {
         repository.addEntity(entity: entity)
     }
     
-    func deleteEntity<T: NSManagedObject>(for entity: T.Type, entityProperty: String, propertyValue: Any) {
+    func deleteEntity(entityProperty: String, propertyValue: Any) {
         repository.deleteEntity(withPredicate: NSPredicate(format: "\(entityProperty) == %@", [propertyValue]))
     }
     
-    func updateEntity<T: NSManagedObject>(for entity: T.Type, entityProperty: String, propertyValue: Any, updateHandler: (T) -> Void) {
+    func updateEntity(entityProperty: String, propertyValue: Any, updateHandler: (T) -> Void) {
         repository.updateEntity(withPredicate: NSPredicate(format: "\(entityProperty) == %@", [propertyValue])) { (existingItem: T) in
             updateHandler(existingItem)
         }

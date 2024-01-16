@@ -26,7 +26,7 @@ protocol ContentViewModelProtocol: ObservableObject {
 final class ContentViewModel: ContentViewModelProtocol {
     
     var coreDataService: CoreDataService<ItemEntity>
-    @Published var itemsList: [ItemEntity]
+    @Published var itemsList: [ItemModel]
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -40,7 +40,9 @@ final class ContentViewModel: ContentViewModelProtocol {
 //    }
     
     func getItems() {
-        self.itemsList = coreDataService.getAllEntities()
+        self.itemsList = coreDataService.getAllEntities(for: ItemEntity.self).map({ entity in
+            ItemModel(entity: entity)
+        })
     }
     
     func addItem(item: ItemModel) {
@@ -53,11 +55,11 @@ final class ContentViewModel: ContentViewModelProtocol {
     }
     
     func deleteItem(index: IndexSet) {
-        coreDataService.deleteEntity(index: index)
+        //coreDataService.deleteEntity(index: index)
     }
     
     func updateItem(newItem: ItemModel) {
-        coreDataService.updateEntity(for: ItemEntity.self, entityProperty: "name", propertyValue: newItem.name) { existingItem in
+        coreDataService.updateEntity(entityProperty: "name", propertyValue: newItem.name) { existingItem in
             
             existingItem.name = newItem.name
             existingItem.quantity = newItem.quantity

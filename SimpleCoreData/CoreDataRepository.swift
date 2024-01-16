@@ -23,9 +23,9 @@ protocol CoreDataRepositoryProtocol {
     var container: NSPersistentContainer { get }
     
     init(modelName: String)
-    func fetchRequest() -> NSFetchRequest<T>
+    func fetchRequest() -> [T]
     func addEntity(entity: T)
-    func deleteEntity(index: IndexSet)
+    func deleteEntity(withPredicate predicate: NSPredicate)
     func updateEntity(withPredicate predicate: NSPredicate, updateHandler: (T) -> Void)
     func saveData()
 }
@@ -45,8 +45,14 @@ final class CoreDataRepository<T: NSManagedObject>: CoreDataRepositoryProtocol {
         }
     }
     
-    func fetchRequest() -> NSFetchRequest<T> {
-        return NSFetchRequest<T>(entityName: String(describing: T.self))
+    func fetchRequest() -> [T] {
+        let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
+        do {
+            return try container.viewContext.fetch(fetchRequest)
+        } catch {
+            print("Failed fetching entities: \(CoreDataError.CoreDataFetchError(error))")
+        }
+        return []
     }
     
     func addEntity(entity: T) {
@@ -76,7 +82,7 @@ final class CoreDataRepository<T: NSManagedObject>: CoreDataRepositoryProtocol {
         }
     }
     
-    func updateEntity<T: NSManagedObject>(withPredicate predicate: NSPredicate, updateHandler: (T) -> Void) {
+    func updateEntity(withPredicate predicate: NSPredicate, updateHandler: (T) -> Void) {
         let context = container.viewContext
         
         let fetchRequest = NSFetchRequest<T>(entityName: String(describing: T.self))
